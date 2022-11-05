@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/bootstrap.css" rel="stylesheet" crossorigin="anonymous">
+
+</head>
+<body>
+<div style="margin: 90px 50px">
+<div class="row">
+    <div class="col">
+        <form method="GET" action="/getIndPartInfo">
+        <label for="name" class="col-form-label">  Part Number</label>
+        <input id="name" list="partNumber" name="name" type="text" class="form-control col-2" placeholder="Part Number" oninput="getData()" required>
+            <datalist id="partNumber">
+
+            </datalist>
+            <button type="submit" class="btn btn-danger m-3">Submit</button>
+        </form>
+    </div>
+    <div class="col">
+    <h1>Upload text file here</h1>
+
+    <form method="POST" action="/upload" enctype="multipart/form-data">
+        <input type="file" name="file" /><br/><br/>
+        <input type="submit" value="Submit" />
+    </form>
+    </div>
+</div>
+    <div class="row-cols-1">
+    <div th:each="partnumber:${partNumbers}">
+        <li><button type="button" th:text="${partnumber}" th:id="${partnumber}" onclick="loadIndWindow(this.id)"></button></li>
+    </div>
+
+
+
+
+    </div>
+</div>
+<button id="demo" onclick="loadDoc()">hey</button>
+<script src="/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+    function loadIndWindow(texts) {
+
+        window.open("/getIndPartInfo?name="+texts);
+
+    }
+</script>
+
+<script>
+    function getData() {
+        var name = document.getElementById("name").value;
+
+        var xhttp = new XMLHttpRequest();
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+
+                const topDiv=document.getElementById("partNumber");
+                topDiv.childNodes.forEach(item=>{
+                    topDiv.removeChild(item);
+                    }
+
+                );
+                console.log(JSON.parse(this.responseText));
+                JSON.parse(this.responseText).forEach(response => {
+                    var newDiv = document.createElement("option");
+                    console.log(response.name);
+
+                    topDiv.appendChild(newDiv).appendChild(document.createTextNode(response.name));
+                });
+
+            }
+        };
+        if (name != null) {
+
+        xhttp.open("GET", "/updateList?name=" + name, true);
+        xhttp.send(); }
+
+    }
+
+
+
+</script>
+
+</body>
+</html>

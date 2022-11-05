@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'PartInfo-'+${part.getName()}"></title>
+    <link href="/css/bootstrap.css" rel="stylesheet" crossorigin="anonymous">
+
+</head>
+<body>
+<div class="row">
+<div class="col">
+    <table class="table table-striped table-hover shadow">
+        <thead>
+        <tr>
+            <td colspan="2" >Results:</td>
+            <td></td>
+        </tr>
+        </thead>
+
+        <tr th:each="Part:${part}">
+                    <td><div id="id" th:text="${Part.getId()}"></div>
+                        <H2 th:text="${Part.getName()}"></H2></td><td><img th:src="${Part.getImgUrl()}"class="shadow img-thumbnail"/></td>
+        </tr>
+
+        <tr th:each="Part:${part}">
+
+            <td colspan="2">
+                <label for="description">Part Description: </label>
+            <span id="description" th:text="${Part.getDescription()}"></span></td></tr>
+        <tr th:each="Part:${part}">
+            <td colspan="2">
+                <label for="avgCost">Average Cost: </label>
+            <span id="avgCost" th:text="${Part.getAvgCost()}"></span></td>
+        </tr>
+        <tr th:each="Part:${part}"><td  >
+            <label for="shopLocation" style="float:left ">Shop Location: </label></td><td>
+
+
+            <textarea id="shopLocation" onfocusout="UpdateLocation(this.value)" th:text="${Part.getShopLocation()}"></textarea>
+        </td>
+
+                </tr>
+        <tr th:each="Part:${part}">
+        <td>
+            <label for="toolList" style="float:left ">Tools Required: </label></td>
+            <td>
+            <div id="toolList">
+                <div class="col-4">
+                    <div id="list-example" class="list-group">
+                        <a class="list-group-item list-group-item-action" th:href="${Tooling}">Tool List</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-2">Item 2</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-4">Item 4</a>
+                    </div>
+                </div>
+            </div>
+
+        </td>
+        </tr>
+    </table>
+        </div>
+
+        <div class="col">
+
+<table class="table table-striped table-hover shadow">
+    <thead>
+    <tr>
+    <td>Company</td>
+    <td >Stock</td>
+        <td>Price</td>
+        <td>Link</td>
+    </tr>
+    </thead>
+   <tr th:each="companylist: ${companyList}">
+    <td th:text="${companylist.name}"></td>
+    <td th:text="${companylist.stock}"></td>
+    <td th:text="${companylist.cost}" ></td>
+       <td><a class="btn btn-primary" th:href="${companylist.url}" role="button">Link</a></td>
+
+
+   </tr>
+
+</table>
+    </div>
+
+</div>
+<script src="/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+
+<!--update database-->
+<script>
+function UpdateLocation(description){
+
+    var xhttp = new XMLHttpRequest();
+    var partID= document.getElementById("id").innerText;
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+
+                console.log(this.responseText);
+
+        }
+    };
+
+    xhttp.open("GET","/setLoc?name="+partID+"&description="+description, true);
+    xhttp.send();
+
+}
+</script>
+
+</body>
+
+</html>
